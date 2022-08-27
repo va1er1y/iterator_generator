@@ -4,20 +4,24 @@
 class FlatIterator():
     def __init__(self, collection):
         self.collection = collection
-        self.cursor = -1
+
 
     def __iter__(self):
-        self.zip = []
-        for i in self.collection:
-            self.zip.extend(i)
+        self.cursor = -1
+        self.results = iter([])
         return self
 
     def __next__(self):
-        self.cursor += 1
-        if self.cursor == len(self.zip):
-            raise StopIteration()
-        return (self.zip[self.cursor])
-
+        try:
+            item = next(self.results)
+        except StopIteration:
+            self.cursor += 1
+            if self.cursor == len(self.collection):
+                raise StopIteration()
+            results = self.collection[self.cursor]
+            self.results = iter(results)
+            item = next(self.results)
+        return (item)
 
 nested_list = [
 	['a', 'b', 'c'],
